@@ -1,0 +1,59 @@
+const webpack = require("webpack");
+const path = require("path");
+const HtmlWebPackPlugin = require("html-webpack-plugin");
+
+module.exports = {
+    entry: {
+        app: "./src/client/app.js",
+    },
+    externals: ["ws", "socket.io"],
+    devtool: "inline-source-map",
+    output: {
+        path: path.resolve(__dirname, "../server/public"),
+        filename: "[name].js",
+        publicPath: "/public"
+    },
+    module: {
+        rules: [
+          {
+            test: /\.(s*)css$/,
+            use: [
+                { loader: "style-loader" }, 
+                { loader: "css-loader" }, 
+                'sass-loader'
+            ]
+          },
+          {
+            test: /\.js$/,
+            exclude: /node_modules/,
+            use: {
+              loader: "babel-loader"
+            }
+          },
+          {
+            test: /\.html$/,
+            use: [
+              {
+                loader: "html-loader"
+              }
+            ]
+          }
+        ]
+      },
+    devServer: {
+        hot: true,
+        port: 3000,
+        host: 'localhost'
+    },
+    plugins: [
+        new HtmlWebPackPlugin({
+            inject: true,
+            template: "./src/client/templates/index.html"
+        }),
+        new webpack.HotModuleReplacementPlugin(),
+        //Webpack has a bug with optional Redis dependencies and fails to compile- we don't need them
+        new webpack.IgnorePlugin(/^hiredis$/),
+        new webpack.IgnorePlugin(/^net$/),
+        new webpack.IgnorePlugin(/^tls$/)
+    ]
+};
