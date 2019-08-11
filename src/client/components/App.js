@@ -1,5 +1,7 @@
 import React from "react";
 import EntryForm from "./EntryForm";
+import Imaging from "./Imaging";
+import Med3WebFrame from "./Med3WebFrame";
 
 export default function App() {
 
@@ -37,6 +39,13 @@ export default function App() {
                         </div>
                     </div>
               </section>
+          </div>
+          <div className="row">
+            <div className="col-lg-12">
+              <h4>Real-time Neuro Image Rendering Below:</h4>
+                <Imaging />
+                <Med3WebFrame />
+            </div>
           </div>
         </div>
       </main>
