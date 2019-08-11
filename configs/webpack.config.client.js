@@ -11,7 +11,9 @@ module.exports = {
     output: {
         path: path.resolve(__dirname, "../server/public"),
         filename: "[name].js",
-        publicPath: "/public"
+        publicPath: "/public",
+        hotUpdateChunkFilename: 'hot/hot-update.js',
+        hotUpdateMainFilename: 'hot/hot-update.json'
     },
     module: {
         rules: [
@@ -42,8 +44,7 @@ module.exports = {
       },
     devServer: {
         hot: true,
-        port: 3000,
-        host: 'localhost'
+        port: 3001
     },
     plugins: [
         new HtmlWebPackPlugin({
@@ -51,9 +52,5 @@ module.exports = {
             template: "./src/client/templates/index.html"
         }),
         new webpack.HotModuleReplacementPlugin(),
-        //Webpack has a bug with optional Redis dependencies and fails to compile- we don't need them
-        new webpack.IgnorePlugin(/^hiredis$/),
-        new webpack.IgnorePlugin(/^net$/),
-        new webpack.IgnorePlugin(/^tls$/)
     ]
 };

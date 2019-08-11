@@ -13,19 +13,19 @@ export default function App() {
       <main role="main">
         <div className="jumbotron">
           <div className="container">
-            <h1 className="display-3">Welcome to the Landing Page!</h1>
-            <p>A place to enjoy using Web Sockets</p>
+            <h1 className="display-3">Welcome to the Realtime Neuroimaging Viewer!</h1>
+            <p>Analyze, Diagnose, and Adapt in Real-Time</p>
           </div>
         </div>
         <div className="container">
           <div className="row">
             <div className="col-md-6">
-              <h2>Search Pixabay!</h2>
+              <h2>Begin Imaging</h2>
             </div>
           </div>
           <div className="row borders">
               <section className="col borders" id="textEntry">
-                  <h3>Enter Information and Search Criteria:</h3>
+                  <h3>Submit Credentials and Patient Information:</h3>
                     <div>
                         <EntryForm />
                     </div>

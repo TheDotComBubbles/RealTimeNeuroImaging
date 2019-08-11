@@ -1,4 +1,4 @@
-const redisConnection = require("../../configs/redis-connection");
+const redisConnection = require("../configs/redis-connection");
 const axios = require("axios");
 
 //worker for querying id

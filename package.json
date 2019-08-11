@@ -1,5 +1,5 @@
 {
-  "name": "assignment7",
+  "name": "finalproject",
   "version": "1.0.0",
   "description": "",
   "private": true,
@@ -8,8 +8,8 @@
     "start:server": "node server/app.js",
     "start:worker": "node worker/app.js",
     "start": "npm-run-all --parallel start:server start:worker",
-    "build": "webpack --config configs/webpack.config.client.js",
-    "dev:server": "webpack-dev-server --open --mode development",
+    "build:client": "webpack --config configs/webpack.config.client.js",
+    "start:devClient": "webpack --mode development --watch --config ./configs/webpack.config.client.js" ,
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Brian Hartigan 10421547",

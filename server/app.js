@@ -2,10 +2,8 @@ var express = require('express')
 var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
-const redisConnection = require("../../configs/redis-connection");
+const redisConnection = require("../configs/redis-connection");
 const path = require("path");
-
-server.listen(3000);
 
 app.use("/public", express.static(__dirname + "/public"));
 
@@ -61,3 +59,7 @@ let search = async (searchInfo) => {
       }, 5000);
   });
 };
+
+server.listen(3000, () => {
+  console.log("Express Server listening on port 3000...");
+});
