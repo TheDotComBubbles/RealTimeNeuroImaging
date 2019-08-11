@@ -78,17 +78,20 @@ class EntryForm extends React.Component {
         let images = [];
         
         for (const [index, value] of results.searchResponse.entries()) {
-            images.push(
-                <div>
-                    <a href="https://pixabay.com/">
-                        <img 
-                            className="image"
-                            src={xss(value.url)}
-                            alt={xss(value.alt)}
-                        />
-                    </a> 
-                </div> 
-            )
+            if(index==1) {
+                images.push(
+                    <div>
+                        <a href="https://pixabay.com/">
+                            <img 
+                                className="image"
+                                src={xss(value.url)}
+                                alt={xss(value.alt)}
+                                height="25px"
+                            />
+                        </a> 
+                    </div> 
+                )
+            }
         };
         if(images.length == 0) {
             images.push(<p>"Sorry, your request did not return any images"</p>)

@@ -5,7 +5,6 @@ const axios = require("axios");
 redisConnection.on("search", async (data, channel) => {
 
     try {
-
         let pixaBayResult = await pixaBay(data.searchQuery);
         
         let urls = pixaBayResult.data.hits;
