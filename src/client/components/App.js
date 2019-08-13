@@ -1,52 +1,18 @@
-import React from "react";
-import EntryForm from "./EntryForm";
-import Med3WebFrame from "./Med3WebFrame";
+import React from 'react';
 
-export default function App() {
+//const loadAuthenticatedApp = () => import('./AuthenticatedApp');
+//const AuthenticatedApp = React.lazy(loadAuthenticatedApp);
+//const LoginApp = React.lazy(() => './LoginApp');
+import LoginApp from './LoginApp';
 
-  return (
-    <div>
-      <nav className="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-        <a className="navbar-brand" href="#">
-          Homepage
-        </a>
-      </nav>
-      <main role="main">
-        <div className="jumbotron">
-          <div className="container">
-            <h1>Welcome to the Realtime Neuroimaging Viewer!</h1>
-            <p>Analyze, Diagnose, and Adapt in Real-Time</p>
-          </div>
-        </div>
-        <div className="container">
-          <div className="row">
-            <div className="col-md-6">
-              <h2>Begin Imaging</h2>
-            </div>
-          </div>
-          <div className="row borders">
-              <section className="col borders" id="textEntry">
-                  <h3>Submit Credentials and Patient Information:</h3>
-                    <div>
-                        <EntryForm />
-                    </div>
-              </section>
-              <section className="col borders" id="textDisplay">
-                  <h3>Search Results:</h3>
-                    <div id="outputLabel">
-                        <div id="outputDiv">
-                        </div>
-                    </div>
-              </section>
-          </div>
-          <div className="row">
-            <div className="col-lg-12">
-              <h4>Real-time Neuro Image Rendering Below:</h4>
-                <Med3WebFrame />
-            </div>
-          </div>
-        </div>
-      </main>
-    </div>
-  );
+let auth = true;
+
+function App() {
+
+    const user = false//useUser()
+    return user ? <AuthenticatedApp /> : <LoginApp />
 }
+
+export default App;
+
+//Referenced from https://github.com/kentcdodds/bookshelf

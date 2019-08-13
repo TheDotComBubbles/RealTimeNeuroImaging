@@ -8,7 +8,7 @@ const path = require("path");
 app.use("/public", express.static(__dirname + "/public"));
 
 app.get("/", (req, res) => {
-  res.sendFile(path.resolve(__dirname, "./public/index.html"),);
+    res.sendFile(path.resolve(__dirname, "./public/index.html"))  
 });
 
 io.on('connection', function (socket) {

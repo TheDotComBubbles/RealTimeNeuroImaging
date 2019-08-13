@@ -122,26 +122,6 @@ class EntryForm extends React.Component {
                         onChange={this.usernameChange} 
                     />
                 </label>
-                <label htmlFor="searchQuery">
-                    Search Term: 
-                    <input className="informationTextEntry" 
-                        id="searchQuery"
-                        name="style" 
-                        type="text"
-                        value={this.state.searchQuery}
-                        onChange={this.searchQueryChange}
-                     />
-                </label>
-                <label htmlFor="message">
-                    Message: 
-                    <input className="informationTextEntry" 
-                        id="message" 
-                        name="style" 
-                        type="text"
-                        value={this.state.message}
-                        onChange={this.messageChange}
-                    />
-                </label>
                 <div>
                     <button 
                         type="submit"

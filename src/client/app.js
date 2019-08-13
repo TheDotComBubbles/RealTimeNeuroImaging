@@ -1,3 +1,4 @@
+import toast from 'iziToast';
 import "xss";
 import React from "react";
 import ReactDOM from "react-dom";

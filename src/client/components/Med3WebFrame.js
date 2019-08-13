@@ -52,19 +52,6 @@ render() {
             display="initial"
             position="relative"
         />
-/*
-        <div 
-            id="med3web-container-3d" 
-            //class="canvas-container col-xs-6 col-sm-6 col-md-8 col-lg-8" 
-            align="center" 
-            //style="display: none;"
-        >
-            <div 
-                id="med3web-info"
-            > 
-            </div>
-        </div>
-        */
     )};
 }
 
