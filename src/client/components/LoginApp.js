@@ -120,11 +120,12 @@ class LoginApp extends React.Component {
 
 render() {
     return (
-      <div className="rubix">
-        <nav className="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-        <a className="navbar-brand" href="#">
-          Homepage
+      <div>
+        <nav className="navbar navbar-expand-sm navbar-dark fixed-top bg-dark front">
+        <a className="navbar-brand centered" href="#">
+          NeuroTech
         </a>
+
         </nav>
         <main role="main">
           <div className="jumbotron">
@@ -137,7 +138,7 @@ render() {
             <div className="row borders">
               <div className="col-12">
                 <article id="login">
-                  <h2>Please Login with Your Credentials to Access Patient Records and Real-time Images</h2>
+                  <h2>Please Login with Your Credentials to Access Patient Records and Realtime Images</h2>
                   <form id="loginForm" onSubmit={this.handleSubmit}>
                     <label htmlFor="username">
                       Username: 
@@ -150,16 +151,18 @@ render() {
                           onChange={this.usernameChange} 
                       />
                     </label>
-                    <label htmlFor="password">
-                      Password: 
-                      <input className="informationTextEntry centered" 
-                          id="password"
-                          name="style" 
-                          type="password"
-                          value={this.state.password}
-                          onChange={this.passwordChange}
-                      />
+                    <div>
+                      <label htmlFor="password">
+                        Password: 
+                        <input className="informationTextEntry centered" 
+                            id="password"
+                            name="style" 
+                            type="password"
+                            value={this.state.password}
+                            onChange={this.passwordChange}
+                        />
                     </label>
+                    </div>
                     <div>
                       <button 
                           type="submit"
@@ -175,7 +178,7 @@ render() {
             <div className="row borders">
               <div className="col">
                 <article id="register">
-                  <h2>Alternatively, you may registed for a new account:</h2>
+                  <h2 className="centered">Alternatively, you may register for a new account:</h2>
                   <form id="registrationForm" onSubmit={this.handleSubmit}>
                     <div className="centered">
                       <label htmlFor="newUsername">
@@ -220,10 +223,10 @@ render() {
                         </div>
                       </label>
                     </div>
-                    <div>
-                      <label htmlFor="phyCheckbox">
+                    <div className="centered">
+                      <label htmlFor="phyCheckbox" className="centered">
                         Please Confirm that you are either a Practicing Physician and/or Phil Barresi: 
-                        <input className="informationTextEntry centered" 
+                        <input className="informationTextEntry" 
                             id="phyCheckbox"
                             name="style" 
                             type="checkbox"

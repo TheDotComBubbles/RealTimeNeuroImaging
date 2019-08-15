@@ -2,19 +2,20 @@
 @import "./bootstrap.min.css";
 @import "variables";
 
+
 main {
   margin: 0;
 }
 
 html {
   margin: 0;
-
+  height: 100%;
 }
 body {
   background-image: url("/public/rubix.jpeg");
-  background-size: 100%;
+  background-size: 100% auto;
   background-repeat: no-repeat;
-  background-position: bottom;
+  background-position: center bottom;
   background-color: rgb(207, 213, 213);
   margin: 0;
   padding: 0;
@@ -61,7 +62,7 @@ button {
 
 .borders {
     border-style: solid;
-    border-width: 3px;
+    border-width: 1px;
     border-color: black;
     border-radius: 5px;
 }
@@ -104,7 +105,23 @@ input {
   margin: 10px;
 }
 
+.jumbotron {
+  z-index: 1;
+}
 .navbar {
-  height: 25px;
-  z-index: 100;
+  position: fixed;
+  height: 40px;
+  font-size: 12rem;
+  z-index: 1000;
+  padding: 2px;
+}
+
+.jumbotron {
+  margin-bottom: 5px;
+  padding-bottom: 5px;
+}
+
+.padded {
+  margin: 10px;
+  padding: 10px;
 }

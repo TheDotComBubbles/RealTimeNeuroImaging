@@ -7,38 +7,30 @@ export default function AuthenticatedApp() {
   return (
     <div>
       <nav className="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-        <a className="navbar-brand" href="#">
-          Homepage
+        <a className="navbar-brand centered" href="#">
+          NeuroTech
         </a>
       </nav>
       <main role="main">
         <div className="jumbotron">
           <div className="container">
-            <h1>Welcome to the Realtime Neuroimaging Viewer!</h1>
-            <p>Analyze, Diagnose, and Respond in Real-Time</p>
-          </div>
-        </div>
-        <div className="container">
-          <div className="row">
-            <div className="col-md-6">
-              <h2>Begin Imaging</h2>
-            </div>
-          </div>
-          <div className="row borders">
+            <h1>Analyze, Diagnose, and Respond in RealTime</h1>
+            <div className="row borders">
               <section className="col borders" id="textEntry">
-                  <h3>Select Patient:</h3>
-                    <div>
+                    <div id="patientData">
                         <EntryForm />
                     </div>
               </section>
               <section className="col borders" id="textDisplay">
-                  <h3>Search Results:</h3>
                     <div id="outputLabel">
                         <div id="outputDiv">
                         </div>
                     </div>
               </section>
+            </div>
           </div>
+        </div>
+        <div className="container">
           <div className="row">
             <div className="col-lg-12">
               <h4>Real-time Neuro Image Rendering Below:</h4>

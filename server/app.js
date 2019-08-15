@@ -5,6 +5,7 @@ var io = require('socket.io')(server);
 const redisConnection = require("../configs/redis-connection");
 const path = require("path");
 
+
 app.use("/public", express.static(__dirname + "/public"));
 
 app.get("/", (req, res) => {
@@ -13,45 +14,42 @@ app.get("/", (req, res) => {
 
 io.on('connection', function (socket) {
 
-  socket.emit('news', { hello: 'world' });
-
-  socket.on('my other event', function (data) {
-  });
-
-  socket.on('search', async (searchInfo) => {
-    
+  socket.on('get', async function () {
     try {
-      let response = await search(searchInfo);
+      
+      let response = await getPatients();
 
-      io.emit('broadcast', {
-        message: searchInfo.message,
-        username: searchInfo.username,
-        searchResponse: response});
+      console.log(response);
+
+      io.emit('patients', {
+        patientData: response
+      });
     }
     catch(error) {
-      console.log("ERROR: Unable to find results for " + searchInfo)
-      socket.emit('searchResult', {searchResponse: "error"});
+      console.error(error);
+      socket.emit('searchResult', {error: "error"});
     }
-  })
+  });
 });
 
-let search = async (searchInfo) => { 
+let getPatients = async () => { 
+  console.log("here");
   return new Promise((fulfill, reject) => {
 
       redisConnection.on(
-          "query-completed", 
+          "patient-results", 
           async (data, channel) => {
-              fulfill(data.searchResult);
+              fulfill(data.patientData);
       });
-
+/*
       redisConnection.on(
           "failure", 
           async (data, channel) => {
               reject(new Error(data.error));
-      })
+      })*/
 
-      redisConnection.emit("search", {
-          searchQuery: searchInfo.searchQuery
+      redisConnection.emit("get-patients", {
+        message: "patients"
       });
 
       setTimeout(() => {

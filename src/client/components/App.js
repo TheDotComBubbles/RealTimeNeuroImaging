@@ -4,12 +4,14 @@ import React from 'react';
 //const AuthenticatedApp = React.lazy(loadAuthenticatedApp);
 //const LoginApp = React.lazy(() => './LoginApp');
 import LoginApp from './LoginApp';
+import AuthenticatedApp from './AuthenticatedApp';
 
 let auth = true;
 
 function App() {
 
-    const user = false//useUser()
+    const user = false
+    //useUser()
     return user ? <AuthenticatedApp /> : <LoginApp />
 }
 

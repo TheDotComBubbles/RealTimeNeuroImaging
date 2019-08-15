@@ -2,6 +2,7 @@ import React from "react";
 import io from "socket.io-client";
 import ReactDOM from "react-dom";
 import xss from "xss";
+import Select from "react-select";
 
 let messageDisplay = "";
 
@@ -18,90 +19,83 @@ class EntryForm extends React.Component {
             message: '',
             readOnly: false,
             imageURL: '',
-            altImageText: ''
+            altImageText: '',
+            patients: [{label: "No Patients Available", value: 1}],
+            patient: '',
+            patientData: []
     };
 
-        this.usernameChange = this.usernameChange.bind(this);
-        this.searchQueryChange = this.searchQueryChange.bind(this)
-        this.messageChange = this.messageChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-        this.submitQuery = this.submitQuery.bind(this);
+        this.handleChange = this.handleChange.bind(this);
     };
 
     componentDidMount() {
-        socket.on('news', function (data) {
-            socket.emit('my other event', { my: 'data' });
-          });
+
+        socket.on('patients', data => {
+
+            this.setState({patientData: data.patientData});
+
+            let patientList = [];
+            
+            data.patientData.map(x => {
+                patientList.push({label: x.name, value: x.id})
+            });
+
+            this.setState({patients: patientList}); 
+
+            //Display Patient Data if a Patient has been selected
+            if(this.state.patient) {
+                let record = this.state.patientData.find(x=> {
+                    return x.id == this.state.patient.value;
+                });
+                this.displayPatient(record);
+            }
+        });
       
         socket.on("broadcast", (response) => {
             this.displayImage(response);
         });
-    }
+            document.body.style.backgroundImage="url('')";
 
-    usernameChange(event) {
-        this.setState({username: xss(event.target.value)});
+        this.getPatients();
     }
-
-    searchQueryChange(event) {
-        this.setState({searchQuery: xss(event.target.value)});
-    }
-
-    messageChange(event) {
-        this.setState({message: xss(event.target.value)});
-        messageDisplay = xss(event.target.value);
+    
+    componentWillMount = () => {
+        document.body.style.backgroundImage=null;
     }
 
     handleSubmit(event) {
         event.preventDefault();
     }
 
-    submitQuery() {
+    getPatients = () => {
 
-
-        socket.emit('search', { 
-            message: this.state.message,
-            searchQuery: this.state.searchQuery,
-            username: this.state.username
-        });
-
-                
-        this.setState({
-            message: '',
-            searchQuery: '',
-            readOnly: true
-        });
-
+        socket.emit('get', function (data) {
+            console.log("getting patients ws");
+          });
     }
 
-    displayImage = (results) => {
+    handleChange(event) {
+        this.setState({patient: event});
 
-        let images = [];
-        
-        for (const [index, value] of results.searchResponse.entries()) {
-            if(index==1) {
-                images.push(
-                    <div>
-                        <a href="https://pixabay.com/">
-                            <img 
-                                className="image"
-                                src={xss(value.url)}
-                                alt={xss(value.alt)}
-                                height="25px"
-                            />
-                        </a> 
-                    </div> 
-                )
-            }
-        };
-        if(images.length == 0) {
-            images.push(<p>"Sorry, your request did not return any images"</p>)
-        }
+        this.getPatients();
+    }
 
+    displayPatient = (patientData) => {
         ReactDOM.render(
             <div id="RenderedHtml">
-                <p>{results.username}</p>
-                <p className="italics">{results.message}</p>
-                {images}                 
+                <h3>Patient Data:</h3>
+                <form onSubmit={this.handleSubmit}>
+                    <label>
+                        Use button to initialize Imaging:
+                        <ul>
+                            <li>ID: {patientData.id}</li>
+                            <li>Name: {patientData.name}</li>
+                            <li>Sex: {patientData.sex}</li>
+                            <li>Medical Condition: {patientData.medical_condition}</li>
+                        </ul>
+                    </label>
+                </form>               
             </div>,
             document.getElementById("outputDiv")
         );
@@ -109,28 +103,15 @@ class EntryForm extends React.Component {
 
     render() {
         return (
-            <form onSubmit={this.handleSubmit}>
-                <label htmlFor="username">
-                    Username: 
-                    <input  
-                        className="informationTextEntry" 
-                        id="username"
-                        name="style" 
-                        type="text"
-                        readOnly={this.state.readOnly}
-                        value={this.state.username}
-                        onChange={this.usernameChange} 
-                    />
-                </label>
-                <div>
-                    <button 
-                        type="submit"
-                        onClick={this.submitQuery}
-                        >
-                        Submit
-                    </button>  
-                </div>
-            </form>
+            <div id="patientList">
+                <h2>Please Select a Patient</h2>
+                        <Select id="patientSelect" 
+                            className="padded" 
+                            options={ this.state.patients} 
+                            onChange={this.handleChange}
+                            value={this.state.patient}
+                            /> 
+            </div>
         ); 
     }
 }

@@ -1,46 +1,66 @@
 const redisConnection = require("../configs/redis-connection");
-const axios = require("axios");
+const bluebird = require("bluebird");
+const redis = bluebird.promisifyAll(require("redis"));
+const client = bluebird.promisifyAll(redis.createClient());
+const flat = require("flat");
+const patients = require("./data");
 
-//worker for querying id
-redisConnection.on("search", async (data, channel) => {
+client.flushall();
+
+      //worker for querying patients
+  redisConnection.on("get-patients", async (data, channel) => {
 
     try {
-        let pixaBayResult = await pixaBay(data.searchQuery);
         
-        let urls = pixaBayResult.data.hits;
+        if(!typeof data.patient == "String") throw "Patient name must be a string"
+        
+        
+        let keys= await client.keysAsync('*');
+        
+        let patientData = keys.map(async x => {
 
-        let urlAndTitle = [];
-        urls.map(value => {
-            urlAndTitle.push({
-                url: value.largeImageURL,
-                alt: value.tags
+            let record = await client.hgetallAsync(x);
+
+            unflat = await flat.unflatten(record);
+            
+            return unflat;
+            
+        });
+
+        Promise.all(patientData).then((result) => {
+            redisConnection.emit("patient-results", 
+            {
+                patientData: result
             });
         })
-        
-        redisConnection.emit("query-completed", 
-            {
-                messageId: data.messageId,
-                searchResult: urlAndTitle
-            });
-
+    
     } catch(error) {
+        console.log("Error retreiving database results")
         redisConnection.emit("failure", 
             {
-                messageId: data.messageId,
                 error: error
             });
     }
   });
-
-  //pixabay query
-  async function pixaBay(query) {
-
-    var API_KEY = '13268820-e322cf4626725ebb7159f116b';
-
-    var URL = "https://pixabay.com/api/?key="+API_KEY+"&q="+encodeURIComponent(query);
-    
-    let responseData = await axios.get(URL);
-    
-    return responseData;
-  }
+  
+    //worker for intialization
+    redisConnection.on("initialize", async (data, channel) => {
+      try {
+          await patients.map(async x=> {
+              let flattened = flat(x);
+              await client.hmsetAsync(x.id, flattened);
+          })
+  
+          console.log("Redis Client Initialized...")
+      }
+      catch(error) {
+          console.log("Error encountered loading data: " + error);
+      }
+    }, function() {
+        redisConnection.emit("initialize", {
+          message: null
+        });      
+    });
+  
+  
 
