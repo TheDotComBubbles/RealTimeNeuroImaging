@@ -4,7 +4,6 @@ import xss from 'xss';
 import ReactDOM from "react-dom";
 import AuthenticatedApp from './AuthenticatedApp';
 
-
 class LoginApp extends React.Component {
       
     constructor(props) {
@@ -28,6 +27,25 @@ class LoginApp extends React.Component {
   this.passwordConfChange = this.passwordConfChange.bind(this);
   this.phyCheckboxChange = this.phyCheckboxChange.bind(this);
 }
+
+  componentDidMount() {
+    this.props.socket.on('loginAttempt', data => {
+        if(data.auth) ReactDOM.render(
+          <AuthenticatedApp 
+            socket={this.props.socket}
+            username={this.state.username}
+          />, document.getElementById("app"));
+        else toast.error({color: 'red', title: 'Error', message: 'Invalid Username and Password Combination'});
+      });
+  }
+
+  login = () => {
+      //authenticate here with socketio send
+      this.props.socket.emit("login", {
+        username: this.state.username,
+        password: this.state.password
+      });
+  }
 
   usernameChange(event) {
     this.setState({username: xss(event.target.value)});
@@ -53,30 +71,6 @@ class LoginApp extends React.Component {
     this.setState({phyCheckbox: xss(event.target.value)});
   }
 
-
-  getUser() {
-    const token = getToken()
-    if (!token) {
-      return Promise.resolve(null)
-    }
-    return client('me').catch(error => {
-      logout()
-      return Promise.reject(error)
-    })
-  }
-
-  handleUserResponse({user: {token, ...user}}) {
-    window.localStorage.setItem(localStorageKey, token)
-    return user
-  }
-
-  login = () => {
-    let username = this.state.username;
-    let password = this.state.password;
-
-    return client('login', {body: {username, password}}).then(handleUserResponse)
-  }
-  
   register = () => {
 
     toast.settings({
@@ -87,32 +81,21 @@ class LoginApp extends React.Component {
       overlay: false,
       animateInside: false,
       color: "green",
-  });
+    });
 
     if(!this.state.newUsername) toast.error({title: 'Error', message: 'Please enter a username'});
     else if(!this.state.newPassword) toast.error({title: 'Error', message: 'Please enter a Password'});
     else if(this.state.newPassword !== this.state.passwordConf) toast.error({title: 'Error', message: 'Confirmation Password Did Not Match'});
     else if(!this.state.phyCheckbox) toast.error({title: 'Error', message: 'Physicians and Graders Only Please'});
     else{
-      ReactDOM.render(<AuthenticatedApp />, document.getElementById("app"));
-          /*return client('register', {body: {username, password}}).then(
-      handleUserResponse,
-
-    )*/
+      this.props.socket.emit("newUser", {
+        username: this.state.username,
+        password: this.state.newPassword
+      })
+      ReactDOM.render(<AuthenticatedApp socket={this.props.socket}/>, document.getElementById("app"));
     }
 
-    
-
   } 
-  
-  logout() {
-    window.localStorage.removeItem(localStorageKey)
-    return Promise.resolve()
-  }
-  
-  getToken() {
-    return window.localStorage.getItem(localStorageKey)
-  }
 
   handleSubmit(event) {
     event.preventDefault();
@@ -250,19 +233,9 @@ render() {
           </div>
         </main>
       </div>
-  /*
-      <Centered>
-          <Modal button={<Button css={{marginRight: 6}}>Login</Button>}>
-            <ModalTitle>Login</ModalTitle>
-            <LoginForm onSubmit={this.login} buttonText="Login" />
-          </Modal>
-          <Modal button={<Button variant="secondary">Register</Button>}>
-            <ModalTitle>Register</ModalTitle>
-            <LoginForm onSubmit={this.register} buttonText="Register" />
-          </Modal>
-        </div>
-      </Centered>*/
     )
   }
 }
+
+
 export default LoginApp;

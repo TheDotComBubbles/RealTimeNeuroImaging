@@ -14,12 +14,10 @@ app.get("/", (req, res) => {
 
 io.on('connection', function (socket) {
 
-  socket.on('get', async function () {
+  socket.on('get', async function (data) {
     try {
       
-      let response = await getPatients();
-
-      console.log(response);
+      let response = await getPatients(data);
 
       io.emit('patients', {
         patientData: response
@@ -30,10 +28,35 @@ io.on('connection', function (socket) {
       socket.emit('searchResult', {error: "error"});
     }
   });
+
+  socket.on('login', async function (data) {
+    try {
+
+      redisConnection.on("loginAttempt", async (data, channel) => {
+        socket.emit('loginAttempt', {
+          auth: data.auth
+        });
+      });
+
+      redisConnection.emit("login", {
+        username: data.username,
+        password: data.password
+      });
+    }
+    catch(error) {
+      console.log(error);
+    }
+  });
+
+  socket.on('newUser', async function(data) {
+    redisConnection.emit("newUser", {
+      username: data.username,
+      password: data.password
+    })
+  });
 });
 
-let getPatients = async () => { 
-  console.log("here");
+let getPatients = async (data) => {
   return new Promise((fulfill, reject) => {
 
       redisConnection.on(
@@ -41,15 +64,13 @@ let getPatients = async () => {
           async (data, channel) => {
               fulfill(data.patientData);
       });
-/*
-      redisConnection.on(
-          "failure", 
-          async (data, channel) => {
-              reject(new Error(data.error));
-      })*/
+
+      
+      if(data.patient) var patient = data.patient;
 
       redisConnection.emit("get-patients", {
-        message: "patients"
+        message: "patients",
+        patient: patient
       });
 
       setTimeout(() => {

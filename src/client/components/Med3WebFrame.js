@@ -1,8 +1,5 @@
 import React, { Component } from 'react';
 import Iframe from 'react-iframe';
-import io from "socket.io-client";
-
-var socket = io('http://localhost:3000');
 
 class Med3WebFrame extends Component {
 
@@ -16,16 +13,6 @@ class Med3WebFrame extends Component {
     this.imageChange = this.imageChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.submitQuery = this.submitQuery.bind(this);
-};
-
-componentDidMount() {
-    socket.on('news', function (data) {
-        socket.emit('my other event', { my: 'data' });
-      });
-  
-    socket.on("broadcast", (response) => {
-        this.displayImage(response);
-    });
 };
 
 imageChange(event) {
@@ -46,14 +33,12 @@ render() {
         <Iframe 
             url="\public\med3web\app\index.html"
             width="100%"
-            height="450px"
-            id="myId"
-            className="myClassname"
+            height="750px"
+            id="med3webIframe"
             display="initial"
             position="relative"
         />
     )};
 }
-
 
 export default Med3WebFrame;

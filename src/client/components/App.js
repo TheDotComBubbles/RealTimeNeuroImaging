@@ -1,20 +1,13 @@
 import React from 'react';
-
-//const loadAuthenticatedApp = () => import('./AuthenticatedApp');
-//const AuthenticatedApp = React.lazy(loadAuthenticatedApp);
-//const LoginApp = React.lazy(() => './LoginApp');
-import LoginApp from './LoginApp';
 import AuthenticatedApp from './AuthenticatedApp';
+import LoginApp from  './LoginApp';
 
-let auth = true;
+function App(props) {
 
-function App() {
-
-    const user = false
-    //useUser()
-    return user ? <AuthenticatedApp /> : <LoginApp />
+    const user = true
+    return (
+            user ? <AuthenticatedApp socket={props.socket}/> : <LoginApp socket={props.socket}/>
+    )
 }
 
 export default App;
-
-//Referenced from https://github.com/kentcdodds/bookshelf

@@ -1,12 +1,11 @@
 import React from "react";
-import io from "socket.io-client";
 import ReactDOM from "react-dom";
 import xss from "xss";
 import Select from "react-select";
+import Med3Controller from "./Med3Controller";
 
 let messageDisplay = "";
 
-var socket = io('http://localhost:3000');
 
 class EntryForm extends React.Component {
 
@@ -31,14 +30,16 @@ class EntryForm extends React.Component {
 
     componentDidMount() {
 
-        socket.on('patients', data => {
+        this.props.socket.on('patients', data => {
 
             this.setState({patientData: data.patientData});
 
             let patientList = [];
             
             data.patientData.map(x => {
-                patientList.push({label: x.name, value: x.id})
+                if(!isNaN(x.id)) {
+                    patientList.push({label: x.name, value: x.id})
+                }
             });
 
             this.setState({patients: patientList}); 
@@ -52,12 +53,15 @@ class EntryForm extends React.Component {
             }
         });
       
-        socket.on("broadcast", (response) => {
+        this.props.socket.on("broadcast", (response) => {
             this.displayImage(response);
         });
             document.body.style.backgroundImage="url('')";
 
         this.getPatients();
+    }
+
+    componentWillUnmount = () => {
     }
     
     componentWillMount = () => {
@@ -69,48 +73,66 @@ class EntryForm extends React.Component {
     }
 
     getPatients = () => {
+        this.props.socket.emit('get', {});
+    }
 
-        socket.emit('get', function (data) {
-            console.log("getting patients ws");
-          });
+    getPatientData = (patientIndex) => {
+        
+        this.props.socket.emit('get', {
+
+            patient: patientIndex
+        });
+    }
+
+    
+    removeImaging = () => {
+        
+        ReactDOM.render(
+            <div id="RenderedHtml">         
+            </div>,
+            document.getElementById("imaging")
+        ) 
     }
 
     handleChange(event) {
+        this.removeImaging();
         this.setState({patient: event});
-
-        this.getPatients();
+        this.getPatientData(event.value);
     }
 
     displayPatient = (patientData) => {
         ReactDOM.render(
             <div id="RenderedHtml">
                 <h3>Patient Data:</h3>
-                <form onSubmit={this.handleSubmit}>
-                    <label>
-                        Use button to initialize Imaging:
-                        <ul>
-                            <li>ID: {patientData.id}</li>
-                            <li>Name: {patientData.name}</li>
-                            <li>Sex: {patientData.sex}</li>
-                            <li>Medical Condition: {patientData.medical_condition}</li>
-                        </ul>
-                    </label>
-                </form>               
+                <div>
+                    <label className="patientData">ID:</label> {patientData.id}
+                </div>
+                <div>
+                    <label className="patientData">Name:</label>{patientData.name}                        
+                </div>
+                <div>
+                    <label className="patientData">Sex:</label>{patientData.sex}
+                </div>
+                <div>
+                <label className="patientData">Condition:</label>{patientData.medical_condition}
+                </div>            
             </div>,
             document.getElementById("outputDiv")
         );
     }
-
+                //
     render() {
         return (
             <div id="patientList">
-                <h2>Please Select a Patient</h2>
-                        <Select id="patientSelect" 
-                            className="padded" 
-                            options={ this.state.patients} 
-                            onChange={this.handleChange}
-                            value={this.state.patient}
-                            /> 
+                <h2>Welcome! Dr. {this.props.username}</h2>
+                <p>Please, select an available patient</p>
+                <Select id="patientSelect" 
+                    className="padded" 
+                    options={ this.state.patients} 
+                    onChange={this.handleChange}
+                    value={this.state.patient}
+                /> 
+                <Med3Controller />
             </div>
         ); 
     }

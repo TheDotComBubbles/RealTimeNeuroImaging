@@ -1,14 +1,21 @@
 import React from "react";
 import EntryForm from "./EntryForm";
 import Med3WebFrame from "./Med3WebFrame";
+import App from "./App";
+import ReactDOM from "react-dom";
 
-export default function AuthenticatedApp() {
+
+export default function AuthenticatedApp(props) {
 
   return (
     <div>
       <nav className="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+        
         <a className="navbar-brand centered" href="#">
           NeuroTech
+        </a>
+        <a className="logout navbar-brand" href="#" onClick={function() {ReactDOM.render(<App socket={props.socket}/>, document.getElementById("app"));}}>
+          Logout
         </a>
       </nav>
       <main role="main">
@@ -18,7 +25,10 @@ export default function AuthenticatedApp() {
             <div className="row borders">
               <section className="col borders" id="textEntry">
                     <div id="patientData">
-                        <EntryForm />
+                        <EntryForm 
+                          socket={props.socket}
+                          username={props.username}
+                        />
                     </div>
               </section>
               <section className="col borders" id="textDisplay">
@@ -34,7 +44,9 @@ export default function AuthenticatedApp() {
           <div className="row">
             <div className="col-lg-12">
               <h4>Real-time Neuro Image Rendering Below:</h4>
-                <Med3WebFrame />
+                <div id="imaging">
+                  
+                </div>
             </div>
           </div>
         </div>
