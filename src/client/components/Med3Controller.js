@@ -8,7 +8,6 @@ class Med3Controller extends React.Component {
       
     constructor(props) {
       super(props);
-
     
         this.state = {
             display: false
@@ -17,12 +16,21 @@ class Med3Controller extends React.Component {
 
     displayImaging = () => {
         
-        ReactDOM.render(
-            <div id="RenderedHtml">
-                <Med3WebFrame />           
-            </div>,
-            document.getElementById("imaging")
-        ) 
+        if(this.props.patient) {
+            ReactDOM.render(
+                <div id="RenderedHtml">
+                    <Med3WebFrame />           
+                </div>,
+                document.getElementById("imaging")
+            ) 
+        }
+        else {
+            toast.warning({
+                title: 'Render Images', 
+                message: 'Select a Patient prior to rendering an image',
+                position: "center"
+            });
+        }
     }
     
     render() {

@@ -29,14 +29,14 @@ io.on('connection', function (socket) {
     }
   });
 
+  redisConnection.on("loginAttempt", async (data, channel) => {
+    socket.emit('loginAttempt', {
+      auth: data.auth
+    });
+  });
+
   socket.on('login', async function (data) {
     try {
-
-      redisConnection.on("loginAttempt", async (data, channel) => {
-        socket.emit('loginAttempt', {
-          auth: data.auth
-        });
-      });
 
       redisConnection.emit("login", {
         username: data.username,

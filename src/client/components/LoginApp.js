@@ -35,7 +35,7 @@ class LoginApp extends React.Component {
             socket={this.props.socket}
             username={this.state.username}
           />, document.getElementById("app"));
-        else toast.error({color: 'red', title: 'Error', message: 'Invalid Username and Password Combination'});
+        else toast.error({color: 'red', title: 'Error', message: 'Invalid Username and Password Combination', position: 'center'});
       });
   }
 
@@ -74,7 +74,6 @@ class LoginApp extends React.Component {
   register = () => {
 
     toast.settings({
-      position: 'center',
       closeOnClick: true,
       closeOnEscape: true,
       progressBar: false,
@@ -83,10 +82,14 @@ class LoginApp extends React.Component {
       color: "green",
     });
 
-    if(!this.state.newUsername) toast.error({title: 'Error', message: 'Please enter a username'});
-    else if(!this.state.newPassword) toast.error({title: 'Error', message: 'Please enter a Password'});
-    else if(this.state.newPassword !== this.state.passwordConf) toast.error({title: 'Error', message: 'Confirmation Password Did Not Match'});
-    else if(!this.state.phyCheckbox) toast.error({title: 'Error', message: 'Physicians and Graders Only Please'});
+    if(!this.state.newUsername) toast.error({
+      position:'center',
+      title: 'Error', 
+      message: 'Please enter a username'
+    });
+    else if(!this.state.newPassword) toast.error({title: 'Error', message: 'Please enter a Password',position:'center', color:'red'});
+    else if(this.state.newPassword !== this.state.passwordConf) toast.error({title: 'Error', message: 'Confirmation Password Did Not Match',position:'center', color:'red'});
+    else if(!this.state.phyCheckbox) toast.error({title: 'Error', message: 'Physicians and Graders Only Please',position:'center', color:'red'});
     else{
       this.props.socket.emit("newUser", {
         username: this.state.username,

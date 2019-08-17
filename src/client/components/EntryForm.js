@@ -132,7 +132,7 @@ class EntryForm extends React.Component {
                     onChange={this.handleChange}
                     value={this.state.patient}
                 /> 
-                <Med3Controller />
+                <Med3Controller patient={this.state.patient}/>
             </div>
         ); 
     }

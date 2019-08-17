@@ -58,7 +58,6 @@ client.flushall();
   })
 
   redisConnection.on("login", async (data, channel) => {
-
     let auth = false;
     try {
         let record = await client.hgetallAsync(data.username);
