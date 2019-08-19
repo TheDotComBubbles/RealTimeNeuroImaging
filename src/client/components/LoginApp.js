@@ -115,7 +115,6 @@ render() {
         <a className="navbar-brand centered" href="#">
           NeuroTech
         </a>
-
         </nav>
         <main role="main">
           <div className="jumbotron">
@@ -208,7 +207,7 @@ render() {
                       /> 
                     </div>                     
                     <div className="row">
-                      <label htmlFor="phyCheckbox" className="centered col-4">
+                      <label htmlFor="phyCheckbox" className="centered col-8">
                         Please Confirm that you are either a Practicing Physician and/or Phil Barresi: 
                         <input
                           className="col-12 centered"

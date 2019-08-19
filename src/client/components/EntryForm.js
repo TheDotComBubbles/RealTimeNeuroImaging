@@ -123,13 +123,51 @@ class EntryForm extends React.Component {
         return (
             <div id="patientList">
                 <h2>Welcome! Dr. {this.props.username}</h2>
-                <p>Please, select an available patient</p>
-                <Select id="patientSelect" 
-                    className="padded" 
-                    options={ this.state.patients} 
-                    onChange={this.handleChange}
-                    value={this.state.patient}
-                /> 
+                <label htmlFor="react-select-2-input">
+                    Please, select an available patient
+                    <Select id="patientSelect" 
+                        theme={(theme) => ({
+                            ...theme,
+                            colors: {
+                            ...theme.colors,
+                            //one of these fixes accessibility 
+                            neutral1:	'black',
+                            neutral2:	'black',
+                            neutral3:	'black',
+                            neutral4:	'black',
+                            neutral5:	'black',
+                            neutral10:	'black',
+                            neutral20:	'black',
+                            neutral30:	'black',
+                            neutral40:	'black',
+                            neutral50:	'black',
+                            neutral60:	'black',
+                            neutral70:	'black',
+                            neutral80:	'black',
+                            neutral90:	'black',
+                            neutral100:	'black',
+                            neutral1a:	'black',
+                            neutral2a:	'black',
+                            neutral3a:	'black',
+                            neutral4a:	'black',
+                            neutral5a:	'black',
+                            neutral10a:	'black',
+                            neutral20a:	'black',
+                            neutral30a:	'black',
+                            neutral40a:	'black',
+                            neutral50a:	'black',
+                            neutral60a:	'black',
+                            neutral70a:	'black',
+                            neutral80a:	'black',
+                            neutral90a:	'black'                      
+                            },
+                        })}                    
+                        className="padded blackText" 
+                        options={ this.state.patients} 
+                        onChange={this.handleChange}
+                        value={this.state.patient}
+                    /> 
+                </label>
                 <Med3Controller patient={this.state.patient}/>
             </div>
         ); 
