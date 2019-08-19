@@ -16,3 +16,5 @@ image-000014.dcm
 image-000015.dcm
 image-000016.dcm
 image-000017.dcm
+image-000018.dcm
+image-000019.dcm

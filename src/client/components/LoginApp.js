@@ -29,6 +29,7 @@ class LoginApp extends React.Component {
 }
 
   componentDidMount() {
+
     this.props.socket.on('loginAttempt', data => {
         if(data.auth) ReactDOM.render(
           <AuthenticatedApp 
@@ -37,6 +38,10 @@ class LoginApp extends React.Component {
           />, document.getElementById("app"));
         else toast.error({color: 'red', title: 'Error', message: 'Invalid Username and Password Combination', position: 'center'});
       });
+  }
+
+  componentWillUnmount() {
+    this.props.socket.off("loginAttempt")
   }
 
   login = () => {
@@ -92,12 +97,11 @@ class LoginApp extends React.Component {
     else if(!this.state.phyCheckbox) toast.error({title: 'Error', message: 'Physicians and Graders Only Please',position:'center', color:'red'});
     else{
       this.props.socket.emit("newUser", {
-        username: this.state.username,
+        username: this.state.newUsername,
         password: this.state.newPassword
       })
-      ReactDOM.render(<AuthenticatedApp socket={this.props.socket}/>, document.getElementById("app"));
+      ReactDOM.render(<AuthenticatedApp socket={this.props.socket} username={this.state.username}/>, document.getElementById("app"));
     }
-
   } 
 
   handleSubmit(event) {
@@ -129,7 +133,7 @@ render() {
                     <label htmlFor="username">
                       Username: 
                       <input  
-                          className="informationTextEntry centered"
+                          className="centered"
                           id="username"
                           name="style" 
                           type="text"
@@ -140,7 +144,7 @@ render() {
                     <div>
                       <label htmlFor="password">
                         Password: 
-                        <input className="informationTextEntry centered" 
+                        <input className="centered" 
                             id="password"
                             name="style" 
                             type="password"
@@ -166,53 +170,48 @@ render() {
                 <article id="register">
                   <h2 className="centered">Alternatively, you may register for a new account:</h2>
                   <form id="registrationForm" onSubmit={this.handleSubmit}>
-                    <div className="centered">
-                      <label htmlFor="newUsername">
+                    <div className="row">
+                      <label htmlFor="newUsername" className="col-12 centered">
                         New Username: 
-                        <div className="centered">
+                        </label>
                           <input  
-                              className="informationTextEntry centered" 
+                              className="centered col-lg-4 col-md-8 col-sm-12" 
                               id="newUsername"
                               name="style" 
                               type="text"
                               value={this.state.newUsername}
                               onChange={this.newUsernameChange} 
                           />
-                        </div>
-                      </label>
                     </div>
-                    <div className="centered">
-                      <label htmlFor="newPassword"  className="centered">
+                    <div className="row">
+                      <label htmlFor="newPassword" className="col-12 centered">
                         New Password: 
-                        <div>
-                          <input className="informationTextEntry centered" 
-                              id="newPassword"
-                              name="style" 
-                              type="password"
-                              value={this.state.newPassword}
-                              onChange={this.newPasswordChange}
-                          />
-                        </div>
                       </label>
+                      <input className="centered col-lg-4 col-md-8 col-sm-12" 
+                          id="newPassword"
+                          name="style" 
+                          type="password"
+                          value={this.state.newPassword}
+                          onChange={this.newPasswordChange}
+                      />
                     </div>
-                    <div className="centered">
-                      <label htmlFor="passwordConf">
+                    <div className="row">
+                      <label htmlFor="passwordConf"  className="col-12 centered">
                         Please Confirm Password: 
-                        <div>
-                        <input className="informationTextEntry centered" 
-                            id="passwordConf"
-                            name="style" 
-                            type="password"
-                            value={this.state.passwordConf}
-                            onChange={this.passwordConfChange}
-                        />
-                        </div>
-                      </label>
-                    </div>
-                    <div className="centered">
-                      <label htmlFor="phyCheckbox" className="centered">
+                      </label>                     
+                      <input className="centered col-lg-4 col-md-8 col-sm-12" 
+                          id="passwordConf"
+                          name="style" 
+                          type="password"
+                          value={this.state.passwordConf}
+                          onChange={this.passwordConfChange}
+                      /> 
+                    </div>                     
+                    <div className="row">
+                      <label htmlFor="phyCheckbox" className="centered col-4">
                         Please Confirm that you are either a Practicing Physician and/or Phil Barresi: 
-                        <input className="informationTextEntry" 
+                        <input
+                          className="col-12 centered"
                             id="phyCheckbox"
                             name="style" 
                             type="checkbox"
@@ -223,7 +222,7 @@ render() {
                     </div>
                     <div>
                       <button 
-                        type="submit"
+                        type="submit"//type=submit veresus type=button?
                         onClick={this.register}
                         >
                         Submit                

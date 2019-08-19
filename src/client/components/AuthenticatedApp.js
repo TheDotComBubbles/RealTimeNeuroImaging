@@ -10,7 +10,7 @@ export default function AuthenticatedApp(props) {
   return (
     <div>
       <nav className="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-        
+        <a className="logo"/> 
         <a className="navbar-brand centered" href="#">
           NeuroTech
         </a>
@@ -45,7 +45,7 @@ export default function AuthenticatedApp(props) {
             <div className="col-lg-12">
               <h4>Real-time Neuro Image Rendering Below:</h4>
                 <div id="imaging">
-                  
+
                 </div>
             </div>
           </div>

@@ -30,6 +30,7 @@ io.on('connection', function (socket) {
   });
 
   redisConnection.on("loginAttempt", async (data, channel) => {
+    //troubleshoot
     socket.emit('loginAttempt', {
       auth: data.auth
     });
@@ -37,7 +38,7 @@ io.on('connection', function (socket) {
 
   socket.on('login', async function (data) {
     try {
-
+      
       redisConnection.emit("login", {
         username: data.username,
         password: data.password

@@ -87,7 +87,6 @@ client.flushall();
             let flattened = flat(x);
             await client.hmsetAsync(x.username, flattened);
         })
-  
           console.log("Redis Client Initialized...")
       }
       catch(error) {
@@ -98,7 +97,6 @@ client.flushall();
           message: null
         });      
     });
-    
     
     renderPatientImages = (patient) => {
 

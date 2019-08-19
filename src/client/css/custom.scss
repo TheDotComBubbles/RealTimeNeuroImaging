@@ -110,11 +110,22 @@ button {
 
 input {
   margin: 10px;
+  float:right;
 }
 
 .logout {
-  font-size: 10;
+  font-size: 15px;
   text-decoration: underline; 
+  float: right;
+  text-align: right;
+  width: 33.3%;
+}
+
+.logo {
+    //margin: auto;
+    text-align: center;
+    float: right; 
+    width:33.4%;
 }
 
 .jumbotron {
@@ -138,10 +149,37 @@ input {
   padding: 10px;
 }
 
-.toolt {
-  position: relative;
-  display: inline-block;
-  border-bottom: 1px dotted black;
+.leftpad {
+  padding-left: 10px;
+}
+
+.rightpad {
+  padding-right: 10px;
+}
+
+input[type=checkbox] {
+  transform: scale(1.5);
+}
+
+.wrap {
+  width: 50%;
+}
+
+//.toolt {
+  //position: relative;
+  //display: inline-block;
+  //border-bottom: 1px dotted black;
+//}
+.block {
+  //display: block;
+  clear: both;
+}
+
+.newFieldInput {
+  width: 15%;
+}
+.newFIeldLabel {
+  width: 100%;
 }
 
 .toolTitle {

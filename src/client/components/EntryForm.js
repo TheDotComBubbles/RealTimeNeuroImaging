@@ -52,16 +52,14 @@ class EntryForm extends React.Component {
                 this.displayPatient(record);
             }
         });
-      
-        this.props.socket.on("broadcast", (response) => {
-            this.displayImage(response);
-        });
-            document.body.style.backgroundImage="url('')";
+        
+        document.body.style.backgroundImage="url('')";
 
         this.getPatients();
     }
 
     componentWillUnmount = () => {
+        this.props.socket.off("patients");
     }
     
     componentWillMount = () => {
