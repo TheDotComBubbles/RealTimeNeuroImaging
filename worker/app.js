@@ -1,47 +1,125 @@
 const redisConnection = require("../configs/redis-connection");
-const axios = require("axios");
+const bluebird = require("bluebird");
+const redis = bluebird.promisifyAll(require("redis"));
+const client = bluebird.promisifyAll(redis.createClient());
+const flat = require("flat");
+const patients = require("./data");
+const users = require("./userData");
+const fs = require("fs-extra");
 
-//worker for querying id
-redisConnection.on("search", async (data, channel) => {
+client.flushall();
+
+      //worker for querying patients
+  redisConnection.on("get-patients", async (data, channel) => {
 
     try {
-
-        let pixaBayResult = await pixaBay(data.searchQuery);
         
-        let urls = pixaBayResult.data.hits;
+        if(data.patient) renderPatientImages(data.patient);
 
-        let urlAndTitle = [];
-        urls.map(value => {
-            urlAndTitle.push({
-                url: value.largeImageURL,
-                alt: value.tags
+        if(!typeof data.patient == "String") throw "Patient name must be a string"
+        
+        
+        let keys= await client.keysAsync('*');
+        
+        let patientData = keys.map(async x => {
+
+
+            let record = await client.hgetallAsync(x);
+
+            unflat = await flat.unflatten(record);
+            
+            return unflat;
+            
+        });
+
+        Promise.all(patientData).then((result) => {
+            redisConnection.emit("patient-results", 
+            {
+                patientData: result
             });
         })
-        
-        redisConnection.emit("query-completed", 
-            {
-                messageId: data.messageId,
-                searchResult: urlAndTitle
-            });
-
+    
     } catch(error) {
+        console.log("Error retreiving database results")
         redisConnection.emit("failure", 
             {
-                messageId: data.messageId,
                 error: error
             });
     }
   });
 
-  //pixabay query
-  async function pixaBay(query) {
+  redisConnection.on("newUser", async (data,channel) => {
+        creds = {
+            username: data.username, 
+            password: data.password
+        }
+        let flattened = flat(creds);
+      await client.hmsetAsync(data.username, flattened);
+  })
 
-    var API_KEY = '13268820-e322cf4626725ebb7159f116b';
+  redisConnection.on("login", async (data, channel) => {
+    let auth = false;
+    try {
+        let record = await client.hgetallAsync(data.username);
+        if(record && record.password === data.password) auth=true
+        redisConnection.emit("loginAttempt", {
+            auth: auth
+        });
+    
+    } catch(error) {
+        console.log(error)
+        redisConnection.emit("failure", 
+            {
+                error: error
+            });
+    }
+  });
+  
+    //worker for intialization
+    redisConnection.on("initialize", async (data, channel) => {
+      try {
+          await patients.map(async x=> {
+              let flattened = flat(x);
+              await client.hmsetAsync(x.id, flattened);
+          })
 
-    var URL = "https://pixabay.com/api/?key="+API_KEY+"&q="+encodeURIComponent(query);
+          await users.map(async x=> {
+            let flattened = flat(x);
+            await client.hmsetAsync(x.username, flattened);
+        })
+          console.log("Redis Client Initialized...")
+      }
+      catch(error) {
+          console.log("Error encountered loading data: " + error);
+      }
+    }, function() {
+        redisConnection.emit("initialize", {
+          message: null
+        });      
+    });
     
-    let responseData = await axios.get(URL);
+    renderPatientImages = (patient) => {
+
+        let sourceDir = './worker/dicoms';
+        let dstDir = './server/public/med3web/app/imaging';
+
+        try {
+            fs.readdir(dstDir, (error,files) => {
+                if (error) throw "Error reading files from directory " + dstDir;
     
-    return responseData;
-  }
+                for (let file of files) {
+                    fs.remove(dstDir + '/' + file)
+                }
+            })
+        }
+        catch(error) {
+            console.log(error);
+        }
+
+        fs.copy(sourceDir + '/' + patient, dstDir, function (error) {
+            if (error) return console.error(error)
+        });
+    };
+  
+  
 
