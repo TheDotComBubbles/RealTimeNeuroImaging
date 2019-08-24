@@ -1,11 +1,11 @@
 import React from "react";
-import io from "socket.io-client";
 import ReactDOM from "react-dom";
 import xss from "xss";
+import Select from "react-select";
+import Med3Controller from "./Med3Controller";
 
 let messageDisplay = "";
 
-var socket = io('http://localhost:3000');
 
 class EntryForm extends React.Component {
 
@@ -18,136 +18,158 @@ class EntryForm extends React.Component {
             message: '',
             readOnly: false,
             imageURL: '',
-            altImageText: ''
+            altImageText: '',
+            patients: [{label: "No Patients Available", value: 1}],
+            patient: '',
+            patientData: []
     };
 
-        this.usernameChange = this.usernameChange.bind(this);
-        this.searchQueryChange = this.searchQueryChange.bind(this)
-        this.messageChange = this.messageChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-        this.submitQuery = this.submitQuery.bind(this);
+        this.handleChange = this.handleChange.bind(this);
     };
 
     componentDidMount() {
-        socket.on('news', function (data) {
-            socket.emit('my other event', { my: 'data' });
-          });
-      
-        socket.on("broadcast", (response) => {
-            this.displayImage(response);
+
+        this.props.socket.on('patients', data => {
+
+            this.setState({patientData: data.patientData});
+
+            let patientList = [];
+            
+            data.patientData.map(x => {
+                if(!isNaN(x.id)) {
+                    patientList.push({label: x.name, value: x.id})
+                }
+            });
+
+            this.setState({patients: patientList}); 
+
+            //Display Patient Data if a Patient has been selected
+            if(this.state.patient) {
+                let record = this.state.patientData.find(x=> {
+                    return x.id == this.state.patient.value;
+                });
+                this.displayPatient(record);
+            }
         });
+        
+        document.body.style.backgroundImage="url('')";
+
+        this.getPatients();
     }
 
-    usernameChange(event) {
-        this.setState({username: xss(event.target.value)});
+    componentWillUnmount = () => {
+        this.props.socket.off("patients");
     }
-
-    searchQueryChange(event) {
-        this.setState({searchQuery: xss(event.target.value)});
-    }
-
-    messageChange(event) {
-        this.setState({message: xss(event.target.value)});
-        messageDisplay = xss(event.target.value);
+    
+    componentWillMount = () => {
+        document.body.style.backgroundImage=null;
     }
 
     handleSubmit(event) {
         event.preventDefault();
     }
 
-    submitQuery() {
-
-
-        socket.emit('search', { 
-            message: this.state.message,
-            searchQuery: this.state.searchQuery,
-            username: this.state.username
-        });
-
-                
-        this.setState({
-            message: '',
-            searchQuery: '',
-            readOnly: true
-        });
-
+    getPatients = () => {
+        this.props.socket.emit('get', {});
     }
 
-    displayImage = (results) => {
-
-        let images = [];
+    getPatientData = (patientIndex) => {
         
-        for (const [index, value] of results.searchResponse.entries()) {
-            images.push(
-                <div>
-                    <a href="https://pixabay.com/">
-                        <img 
-                            className="image"
-                            src={xss(value.url)}
-                            alt={xss(value.alt)}
-                        />
-                    </a> 
-                </div> 
-            )
-        };
-        if(images.length == 0) {
-            images.push(<p>"Sorry, your request did not return any images"</p>)
-        }
+        this.props.socket.emit('get', {
 
+            patient: patientIndex
+        });
+    }
+
+    
+    removeImaging = () => {
+        
+        ReactDOM.render(
+            <div id="RenderedHtml">         
+            </div>,
+            document.getElementById("imaging")
+        ) 
+    }
+
+    handleChange(event) {
+        this.removeImaging();
+        this.setState({patient: event});
+        this.getPatientData(event.value);
+    }
+
+    displayPatient = (patientData) => {
         ReactDOM.render(
             <div id="RenderedHtml">
-                <p>{results.username}</p>
-                <p className="italics">{results.message}</p>
-                {images}                 
+                <h3>Patient Data:</h3>
+                <div>
+                    <label className="patientData">ID:</label> {patientData.id}
+                </div>
+                <div>
+                    <label className="patientData">Name:</label>{patientData.name}                        
+                </div>
+                <div>
+                    <label className="patientData">Sex:</label>{patientData.sex}
+                </div>
+                <div>
+                <label className="patientData">Condition:</label>{patientData.medical_condition}
+                </div>            
             </div>,
             document.getElementById("outputDiv")
         );
     }
-
+                //
     render() {
         return (
-            <form onSubmit={this.handleSubmit}>
-                <label htmlFor="username">
-                    Username: 
-                    <input  
-                        className="informationTextEntry" 
-                        id="username"
-                        name="style" 
-                        type="text"
-                        readOnly={this.state.readOnly}
-                        value={this.state.username}
-                        onChange={this.usernameChange} 
-                    />
-                </label>
-                <label htmlFor="searchQuery">
-                    Search Term: 
-                    <input className="informationTextEntry" 
-                        id="searchQuery"
-                        name="style" 
-                        type="text"
-                        value={this.state.searchQuery}
-                        onChange={this.searchQueryChange}
-                     />
-                </label>
-                <label htmlFor="message">
-                    Message: 
-                    <input className="informationTextEntry" 
-                        id="message" 
-                        name="style" 
-                        type="text"
-                        value={this.state.message}
-                        onChange={this.messageChange}
-                    />
-                </label>
-                <div>
-                    <button 
-                        type="submit"
-                        onClick={this.submitQuery}
-                        >
-                        Submit
-                    </button>  
-                </div>
-            </form>
+            <div id="patientList">
+                <h2>Welcome! Dr. {this.props.username}</h2>
+                <label>
+                    Please, select an available patient
+                    <Select id="patientSelect" 
+                        theme={(theme) => ({
+                            ...theme,
+                            colors: {
+                            ...theme.colors,
+                            //one of these fixes accessibility 
+                            neutral1:	'black',
+                            neutral2:	'black',
+                            neutral3:	'black',
+                            neutral4:	'black',
+                            neutral5:	'black',
+                            neutral10:	'black',
+                            neutral20:	'black',
+                            neutral30:	'black',
+                            neutral40:	'black',
+                            neutral50:	'black',
+                            neutral60:	'black',
+                            neutral70:	'black',
+                            neutral80:	'black',
+                            neutral90:	'black',
+                            neutral100:	'black',
+                            neutral1a:	'black',
+                            neutral2a:	'black',
+                            neutral3a:	'black',
+                            neutral4a:	'black',
+                            neutral5a:	'black',
+                            neutral10a:	'black',
+                            neutral20a:	'black',
+                            neutral30a:	'black',
+                            neutral40a:	'black',
+                            neutral50a:	'black',
+                            neutral60a:	'black',
+                            neutral70a:	'black',
+                            neutral80a:	'black',
+                            neutral90a:	'black'                      
+                            },
+                        })}               
+                        className="padded blackText" 
+                        options={ this.state.patients} 
+                        onChange={this.handleChange}
+                        value={this.state.patient}
+                    /> 
+                    </label>
+                <Med3Controller patient={this.state.patient}/>
+            </div>
         ); 
     }
 }
