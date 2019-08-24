@@ -1,45 +1,12 @@
-import React from "react";
-import EntryForm from "./EntryForm";
+import React from 'react';
+import AuthenticatedApp from './AuthenticatedApp';
+import LoginApp from  './LoginApp';
 
-export default function App() {
+function App(props) {
 
-  return (
-    <div>
-      <nav className="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-        <a className="navbar-brand" href="#">
-          Homepage
-        </a>
-      </nav>
-      <main role="main">
-        <div className="jumbotron">
-          <div className="container">
-            <h1 className="display-3">Welcome to the Realtime Neuroimaging Viewer!</h1>
-            <p>Analyze, Diagnose, and Adapt in Real-Time</p>
-          </div>
-        </div>
-        <div className="container">
-          <div className="row">
-            <div className="col-md-6">
-              <h2>Begin Imaging</h2>
-            </div>
-          </div>
-          <div className="row borders">
-              <section className="col borders" id="textEntry">
-                  <h3>Submit Credentials and Patient Information:</h3>
-                    <div>
-                        <EntryForm />
-                    </div>
-              </section>
-              <section className="col borders" id="textDisplay">
-                  <h3>Pixabay Search Results:</h3>
-                    <div id="outputLabel">
-                        <div id="outputDiv">
-                        </div>
-                    </div>
-              </section>
-          </div>
-        </div>
-      </main>
-    </div>
-  );
+    return (
+            <LoginApp socket={props.socket} />
+    )
 }
+
+export default App;

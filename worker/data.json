@@ -1,0 +1,26 @@
+[
+    {
+        "id": 0,
+        "name": "Neo",
+        "sex": "male",
+        "medical_condition": "Mental Delusions of Grandeur"
+    },
+    {
+        "id": 1,
+        "name": "Morpheus",
+        "sex": "male",
+        "medical_condition": "Dissociative Identity Disorder "
+    },
+    {
+        "id": 2,
+        "name": "Pinky",
+        "sex": "male",
+        "medical_condition": "Low Mental Acuity"
+    },
+    {
+        "id": 3,
+        "name": "The Brain",
+        "sex": "male",
+        "medical_condition": "Sociopathy"
+    }
+]

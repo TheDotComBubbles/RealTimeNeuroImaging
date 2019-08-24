@@ -9,7 +9,7 @@
     "start:worker": "node worker/app.js",
     "start": "npm-run-all --parallel start:server start:worker",
     "build:client": "webpack --config configs/webpack.config.client.js",
-    "start:devClient": "webpack --mode development --watch --config ./configs/webpack.config.client.js" ,
+    "start:devClient": "webpack --mode development --watch --config ./configs/webpack.config.client.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Brian Hartigan 10421547",
@@ -27,23 +27,33 @@
     "node-sass": "^4.12.0",
     "sass-loader": "^7.1.0",
     "style-loader": "^0.23.1",
-    "webpack": "^4.35.2",
+    "webpack": "^4.39.1",
     "webpack-cli": "^3.3.5",
     "webpack-dev-server": "^3.7.2"
   },
   "dependencies": {
     "axios": "^0.19.0",
     "bluebird": "^3.5.5",
+    "clean-webpack-plugin": "^3.0.0",
+    "flat": "^4.1.0",
     "fs": "0.0.1-security",
+    "fs-extra": "^8.1.0",
+    "izitoast": "^1.4.0",
+    "jquery": "^3.4.1",
+    "json-loader": "^0.5.7",
     "node-redis": "^0.1.7",
     "node-redis-pubsub": "^4.0.0",
     "npm-run-all": "^4.1.5",
     "path": "^0.12.7",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
+    "react-iframe": "^1.8.0",
+    "react-native-cli": "^2.0.1",
+    "react-select": "^3.0.4",
     "redis": "^2.8.0",
     "socket.io": "^2.2.0",
     "socket.io-client": "^2.2.0",
+    "tota11y": "^0.1.6",
     "xss": "^1.0.6"
   }
 }
