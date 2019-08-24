@@ -31,11 +31,11 @@ render() {
     return (
 
         <Iframe 
-            url="\public\med3web\app\index.html"
-            width="100%"
-            height="750px"
+            url="/public/med3web/app/index.html"
+            height="750"
             id="med3webIframe"
             display="initial"
+            className="iframeSize"
             position="relative"
         />
     )};

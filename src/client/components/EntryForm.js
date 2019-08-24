@@ -123,7 +123,7 @@ class EntryForm extends React.Component {
         return (
             <div id="patientList">
                 <h2>Welcome! Dr. {this.props.username}</h2>
-                <label htmlFor="react-select-2-input">
+                <label>
                     Please, select an available patient
                     <Select id="patientSelect" 
                         theme={(theme) => ({
@@ -161,13 +161,13 @@ class EntryForm extends React.Component {
                             neutral80a:	'black',
                             neutral90a:	'black'                      
                             },
-                        })}                    
+                        })}               
                         className="padded blackText" 
                         options={ this.state.patients} 
                         onChange={this.handleChange}
                         value={this.state.patient}
                     /> 
-                </label>
+                    </label>
                 <Med3Controller patient={this.state.patient}/>
             </div>
         ); 

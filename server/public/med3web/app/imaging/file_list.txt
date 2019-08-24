@@ -13,3 +13,8 @@ image-000011.dcm
 image-000012.dcm
 image-000013.dcm
 image-000014.dcm
+image-000015.dcm
+image-000016.dcm
+image-000017.dcm
+image-000018.dcm
+image-000019.dcm

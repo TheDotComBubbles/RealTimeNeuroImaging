@@ -18,7 +18,7 @@ class Med3Controller extends React.Component {
         
         if(this.props.patient) {
             ReactDOM.render(
-                <div id="RenderedHtml">
+                <div id="renderedwebframe">
                     <Med3WebFrame />           
                 </div>,
                 document.getElementById("imaging")
@@ -36,15 +36,10 @@ class Med3Controller extends React.Component {
     render() {
         return (
             <div className="centered">
-                <span className="toolt">
-                    <img 
-                        className="padded help"
-                        src="/public/help.png" 
-                        alt="HelpIcon">
-                    </img>
-                    <span 
+                <div className="toolt">
+                    <div 
                         className="toolttext">
-                        <span>
+                        <div>
                             <div className="toolTitle">
                                 Selecting a Patient: 
                             </div>
@@ -65,17 +60,22 @@ class Med3Controller extends React.Component {
                                     Choose Rendering, View, and editing options in the left pane
                                 </li>
                             </ul>
-                        </span>
-                    </span>
-                </span>
-                <button
-                    className="tooltiptext"
-                    title="Tooltip"
-                    type="submit"
-                    onClick={this.displayImaging}
-                    >
-                    Render Images                
-                </button> 
+                        </div>
+                    </div>
+                    <img 
+                        className="padded help"
+                        src="/public/help.png" 
+                        alt="HelpIcon">
+                    </img>
+                    <button
+                        className="tooltiptext"
+                        title="Tooltip"
+                        type="submit"
+                        onClick={this.displayImaging}
+                        >
+                        Render Images                
+                    </button> 
+                </div>
             </div>
         );
     };
