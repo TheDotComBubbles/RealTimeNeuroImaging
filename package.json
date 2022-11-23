@@ -51,7 +51,7 @@
     "react-native-cli": "^2.0.1",
     "react-select": "^3.0.4",
     "redis": "^2.8.0",
-    "socket.io": "^2.2.0",
+    "socket.io": "^2.5.0",
     "socket.io-client": "^2.2.0",
     "tota11y": "^0.1.6",
     "xss": "^1.0.6"
